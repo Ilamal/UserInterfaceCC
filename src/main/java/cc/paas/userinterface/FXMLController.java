@@ -3,6 +3,7 @@ package cc.paas.userinterface;
 import com.sun.glass.ui.Window;
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,6 +39,9 @@ public class FXMLController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PCAP files (*.pcap)", "*.pcap");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(primarystage);
+        if(file.getName().substring(file.getName().lastIndexOf(".")).equals("pcap")) {
+            ParsePCAP(file);
+        }
         successLabel.setText(file.toString() + "\nready to upload");
     }
 
@@ -88,6 +92,13 @@ public class FXMLController implements Initializable {
     public void Help() {
         Alert alert = new Alert(AlertType.INFORMATION, "Upload a PCAP type dictionary file to crack password");
         alert.show();
+    }
+    private void ParsePCAP(File pcap) {
+        HashMap<String, Object> data = PcapReader.pcapReader(pcap.getAbsolutePath());
+
+        data.forEach((key, value) -> System.out.println(key + " = " + value));
+        
+        //TODO 
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
